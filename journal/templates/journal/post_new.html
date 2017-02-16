@@ -1,0 +1,10 @@
+{% extends "journal/layout.html" %}
+{% block content %}
+<form method='post' action="">
+    <input type="text" name="title">
+    <input type="text" name="content">
+    {% csrf_token %}
+    {{ form }}
+        <input type="submit">
+</form>
+{% endblock content %}

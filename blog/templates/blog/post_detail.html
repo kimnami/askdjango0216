@@ -1,0 +1,63 @@
+{% extends "blog/layout.html"%}
+{% block jsdetail %}
+    <style type="text/css">
+        #map {
+            width:240px;
+            height: 240px;
+            background-color: blue;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+     <script>
+
+function initMap() {
+    var $map = $('#map');
+    if ( $map.size() >0 ) {
+        var lat = $map.data('lat');
+        var lng = $map.data('lng');
+
+      var myLatLng = {'lat': lat, 'lng': lng};
+
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 7,
+        center: myLatLng
+      });
+
+      var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+        title: 'Hello World!'
+      });
+    }
+
+}
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script>
+    {% endblock %}
+
+
+{% block content %}
+        <li>title : {{ post.title }}</li>
+        <li>content : {{ post.content|linebreaks }}</li>
+
+        {% if post.lnglat %}
+            <div id="map" data-lat='43.2' data-lng='134.466'></div>
+        {% endif %}
+        <h3>comments</h3>
+        <ol>
+        {% for comment in comment %}
+
+        <li>{{ comment.message }}</li>
+
+        {% endfor %}
+        </ol>
+
+        <h3>tags</h3>
+<!--         <li>{{ post.tag.all }}</li>
+ -->        {% for tag in tag %}
+        <li>{{ tag.tag }}</li>
+
+        {% endfor %}
+{% endblock %}

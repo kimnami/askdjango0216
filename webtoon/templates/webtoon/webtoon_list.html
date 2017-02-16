@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" media="all" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript">
+</script> <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+
+</head>
+<body>
+<h2>새로운 웹툰 등록</h2>
+<form method="POST" id="post-form">
+{% csrf_token %}
+
+<input type="text" id="webtitle" name="webtitle">
+<input type="submit" id="submit">
+</form>
+<div id="listDiv">
+</div>
+<h2>웹툰갯수<span id="counter" data-direction="up" data-interval="1000">{{count}}</span></h2>
+<h1>웹툰 목록</h1>
+<form method="GET" action="">
+<input id="search_web" size="64" type="text" name="q" value={{ q }} >
+<input type="submit" name="검색">
+</form>
+<h3> ' {{ q }} ' 에 대한 검색결과</h3>
+<ul>
+{% for webtoon in webtoon_list %}
+<li>{{webtoon.title}}</li>
+{% endfor %}
+</ul>
+<h3>전체목록</h3>
+<ul>
+{% for webtoon in qs %}
+<li>{{webtoon.title}}</li>
+{% endfor %}
+</ul>
+
+
+<script type="text/javascript">
+    $(function(){
+        $('#search_web').autocomplete({
+            source:'/webtoon/search/',
+            focus: function( event, ui ) { val( ui.item.label );return false;}
+        });
+    });
+
+$(function poll(){
+                    $.ajax({
+                        url: "{% url 'webtoon:counter' %}" , // 요청 url
+                        success: function(data){
+                            //update index_dashboard
+                             $('#counter').text(data.cnt);
+                        }, // 요청이 성공했을 경우
+                        error: function(data){
+                            console.log('error');
+                        }, // 에러가 날 경우
+                        dataType: "json",
+                        timeout: 2500, // 응답 대기 제한 시간
+                        complete: poll, // 요청이 완료된 후 실행 할 아이
+                    });
+                });
+
+
+    $('#counter').each(function () {
+    $(this).prop('Counter',0).animate({
+        Counter: $(this).text()
+    }, {
+        duration: 4000,
+        easing: 'swing',
+        step: function (now) {
+            $(this).text(Math.ceil(now));
+        }
+    });
+});
+
+
+
+
+
+</script>
+
+</body>
+</html>
